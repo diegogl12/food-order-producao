@@ -5,13 +5,15 @@ defmodule FoodOrderProducao.InterfaceAdapters.Gateways.Clients.Produtos do
 
   @impl true
   def get_products([_ | _] = product_ids) do
-    body = Jason.encode!(product_ids)
+    params = Jason.encode!(product_ids)
 
     client()
-    |> Tesla.get("/Produtos/ObterPorIds", body: body)
+    |> Tesla.get("/produtos/ObterPorIds", query: [ids: params])
     |> case do
       {:ok, %{status: status, body: body}} when status >= 200 and status < 300 ->
         {:ok, to_domain(body)}
+      {:ok, %{status: status, body: body}} ->
+        {:error, body}
       error ->
         {:error, error}
     end
@@ -21,6 +23,7 @@ defmodule FoodOrderProducao.InterfaceAdapters.Gateways.Clients.Produtos do
 
   defp to_domain(body) do
     body
+    |> Jason.decode!()
     |> Enum.map(
       fn raw_product ->
         %Product{
@@ -47,6 +50,6 @@ defmodule FoodOrderProducao.InterfaceAdapters.Gateways.Clients.Produtos do
   end
 
   defp get_host do
-    Application.get_env(:food_order_producao, :produtos)[:host]
+    Application.get_env(:food_order_producao, :pedidos)[:host]
   end
 end

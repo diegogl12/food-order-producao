@@ -1,4 +1,5 @@
 defmodule FoodOrderProducao.Domain.Entities.Product do
+  @derive {Jason.Encoder, only: [:id, :name, :category, :price, :description, :preparation_time, :images]}
   defstruct [:id, name: nil, category: nil, price: nil, description: nil, preparation_time: nil, images: []]
 
   @type t :: %__MODULE__{

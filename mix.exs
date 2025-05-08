@@ -15,7 +15,7 @@ defmodule FoodOrderProducao.MixProject do
   def application do
     [
       mod: {FoodOrderProducao.Application, []},
-      extra_applications: [:logger]
+      extra_applications: [:logger, :mongodb_driver]
     ]
   end
 
@@ -33,6 +33,7 @@ defmodule FoodOrderProducao.MixProject do
       {:req, "~> 0.4.0"},
       {:tesla, "~> 1.14"},
       {:uuid, "~> 1.1"},
+      {:mongodb_driver, "~> 1.5.0"}
     ]
   end
 end
