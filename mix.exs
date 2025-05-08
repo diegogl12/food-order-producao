@@ -29,7 +29,7 @@ defmodule FoodOrderProducao.MixProject do
       {:jason, "~> 1.4.4"},
       {:mint, "~> 1.0"},
       {:mox, "~> 1.0", only: :test},
-      {:mock, "~> 0.3.0", only: :test},
+      {:mimic, "~> 1.10", only: :test},
       {:plug_cowboy, "~> 2.7.3"},
       {:req, "~> 0.4.0"},
       {:tesla, "~> 1.14"},

@@ -1,7 +1,6 @@
 defmodule FoodOrderProducao.InterfaceAdapters.Controllers.ProductionControllerTest do
-  use ExUnit.Case, async: true
-  import Mox
-  import Mock
+  use ExUnit.Case, async: false
+  use Mimic
 
   alias FoodOrderProducao.InterfaceAdapters.Controllers.ProductionController
   alias FoodOrderProducao.Domain.Entities.Production
@@ -10,6 +9,9 @@ defmodule FoodOrderProducao.InterfaceAdapters.Controllers.ProductionControllerTe
   alias FoodOrderProducao.UseCases.InitializeProduction
   alias FoodOrderProducao.UseCases.UpdateProductionAndOrderStatus
   alias FoodOrderProducao.UseCases.GetProduction
+
+  setup :set_mimic_global
+  setup :verify_on_exit!
 
   setup do
     production_json = ~s({"order_id": "order-123", "status": "PENDING"})
@@ -20,69 +22,62 @@ defmodule FoodOrderProducao.InterfaceAdapters.Controllers.ProductionControllerTe
 
   describe "initialize_production/1" do
     test "successfully initializes production", %{production_json: production_json} do
-      with_mock(EventProductionDTO, [
-        from_json: fn _ -> {:ok, %EventProductionDTO{order_id: "order-123", status: "PENDING"}} end,
-        to_domain: fn _ -> {:ok, %Production{order_id: "order-123", status: "PENDING"}} end
-      ]) do
-        with_mock(InitializeProduction, [
-          execute: fn _, _ -> {:ok, %Production{order_id: "order-123", status: "PENDING"}} end
-        ]) do
-          assert {:ok, %Production{order_id: "order-123", status: "PENDING"}} =
-                   ProductionController.initialize_production(production_json)
-        end
-      end
+      EventProductionDTO
+      |> stub(:from_json, fn _ -> {:ok, %EventProductionDTO{order_id: "order-123", status: "PENDING"}} end)
+      |> stub(:to_domain, fn _ -> {:ok, %Production{order_id: "order-123", status: "PENDING"}} end)
+
+      InitializeProduction
+      |> stub(:execute, fn _, _ -> {:ok, %Production{order_id: "order-123", status: "PENDING"}} end)
+
+      assert {:ok, %Production{order_id: "order-123", status: "PENDING"}} =
+               ProductionController.initialize_production(production_json)
     end
 
     test "returns error when DTO conversion fails", %{production_json: production_json} do
-        MockEventProductionDTO
-        |> expect(:from_json, fn _ -> {:error, "Invalid event production data"} end)
+      EventProductionDTO
+      |> stub(:from_json, fn _ -> {:error, "Invalid event production data"} end)
 
-        assert {:error, "Invalid event production data"} = ProductionController.initialize_production(production_json)
+      assert {:error, "Invalid event production data"} = ProductionController.initialize_production(production_json)
     end
   end
 
   describe "update_production_status/1" do
     test "successfully updates production status", %{production_params: production_params} do
-      with_mock(WebProductionDTO, [
-        from_map: fn _ -> {:ok, %Production{order_id: "order-123", status: "COMPLETED"}} end,
-        to_domain: fn _ -> {:ok, %Production{order_id: "order-123", status: "COMPLETED"}} end
-      ]) do
-        with_mock(UpdateProductionAndOrderStatus, [
-          execute: fn _, _, _ -> {:ok, %Production{order_id: "order-123", status: "COMPLETED"}} end
-        ]) do
-          assert {:ok, %Production{order_id: "order-123", status: "COMPLETED"}} =
-                   ProductionController.update_production_status(production_params)
-        end
-      end
+      WebProductionDTO
+      |> stub(:from_map, fn _ -> {:ok, %Production{order_id: "order-123", status: "COMPLETED"}} end)
+      |> stub(:to_domain, fn _ -> {:ok, %Production{order_id: "order-123", status: "COMPLETED"}} end)
+
+      UpdateProductionAndOrderStatus
+      |> stub(:execute, fn _, _, _ -> {:ok, %Production{order_id: "order-123", status: "COMPLETED"}} end)
+
+      assert {:ok, %Production{order_id: "order-123", status: "COMPLETED"}} =
+               ProductionController.update_production_status(production_params)
     end
 
     test "returns error when DTO conversion fails", %{production_params: production_params} do
-      with_mock(WebProductionDTO, [
-        from_map: fn _ -> {:error, "Invalid web production data"} end
-      ]) do
-        assert {:error, "Invalid web production data"} =
-                 ProductionController.update_production_status(production_params)
-      end
+      WebProductionDTO
+      |> stub(:from_map, fn _ -> {:error, "Invalid web production data"} end)
+
+      assert {:error, "Invalid web production data"} =
+               ProductionController.update_production_status(production_params)
     end
   end
 
   describe "get_production/1" do
     test "successfully retrieves production" do
-      with_mock(GetProduction, [
-        execute: fn _, _, _ -> {:ok, %Production{order_id: "order-123", status: "PENDING"}} end
-      ]) do
-        assert {:ok, %Production{order_id: "order-123", status: "PENDING"}} =
-                 ProductionController.get_production("order-123")
-      end
+      GetProduction
+      |> stub(:execute, fn _, _, _ -> {:ok, %Production{order_id: "order-123", status: "PENDING"}} end)
+
+      assert {:ok, %Production{order_id: "order-123", status: "PENDING"}} =
+               ProductionController.get_production("order-123")
     end
 
     test "returns error when production is not found" do
-      with_mock(GetProduction, [
-        execute: fn _, _, _ -> {:error, "Production not found"} end
-      ]) do
-        assert {:error, "Production not found"} =
-                 ProductionController.get_production("order-123")
-      end
+      GetProduction
+      |> stub(:execute, fn _, _, _ -> {:error, "Production not found"} end)
+
+      assert {:error, "Production not found"} =
+               ProductionController.get_production("order-123")
     end
   end
 end
