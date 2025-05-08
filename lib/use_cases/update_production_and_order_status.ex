@@ -3,6 +3,7 @@ defmodule FoodOrderProducao.UseCases.UpdateProductionAndOrderStatus do
 
   alias FoodOrderProducao.Domain.Entities.Production
 
+  @callback execute(Production.t(), ProductionRepository.t(), OrderGateway.t()) :: {:ok, Production.t()} | {:error, String.t()}
   def execute(%Production{} = production, production_repository, order_client) do
     with {:ok, %Production{} = old_production} <- production_repository.get_by_order_id(production.order_id),
         new_production <- %Production{old_production | status: production.status},

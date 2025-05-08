@@ -10,6 +10,7 @@ defmodule FoodOrderProducao.InterfaceAdapters.DTOs.EventProductionDTO do
           status: String.t() | nil
         }
 
+  @callback from_json(String.t()) :: {:ok, t()} | {:error, String.t()}
   def from_json(json) do
     with {:ok, data} <- Jason.decode(json),
          {:ok, dto} <- from_event_production_map(data) do
@@ -17,6 +18,7 @@ defmodule FoodOrderProducao.InterfaceAdapters.DTOs.EventProductionDTO do
     end
   end
 
+  @callback from_event_production_map(map()) :: {:ok, t()} | {:error, String.t()}
   def from_event_production_map(map) when is_map(map) do
     map_with_atoms =
       map
@@ -35,6 +37,7 @@ defmodule FoodOrderProducao.InterfaceAdapters.DTOs.EventProductionDTO do
     _ -> {:error, "Invalid event production data"}
   end
 
+  @callback from_map(map()) :: {:ok, t()} | {:error, String.t()}
   def from_map(map) when is_map(map) do
     map_with_atoms = map
     |> Enum.map(fn {key, value} ->
@@ -50,6 +53,7 @@ defmodule FoodOrderProducao.InterfaceAdapters.DTOs.EventProductionDTO do
     {:ok, dto}
   end
 
+  @callback to_domain(t()) :: {:ok, Production.t()}
   def to_domain(%__MODULE__{} = dto) do
     {:ok, %Production{
       order_id: dto.order_id,

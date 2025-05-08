@@ -2,6 +2,7 @@ defmodule FoodOrderProducao.UseCases.InitializeProduction do
   require Logger
   alias FoodOrderProducao.Domain.Entities.Production
 
+  @callback execute(Production.t(), ProductionRepository.t()) :: {:ok, Production.t()} | {:error, String.t()}
   def execute(%Production{} = production, production_repository) do
     with production <- set_pending_status(production),
         {:ok, production} <- production_repository.create(production) do

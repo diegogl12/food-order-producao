@@ -35,22 +35,20 @@ defmodule FoodOrderProducao.InterfaceAdapters.Repositories.ProductionRepository 
     case Mongo.get_by(ProductionSchema, %{order_id: order_id}) do
       nil ->
         {:error, :not_found}
-
-      production ->
-        {:ok, to_production(production)}
-
       {:error, error} ->
         {:error, error}
+      production ->
+        {:ok, to_production(production)}
     end
   end
 
   defp to_production(production_schema) do
     %Production{
-      order_id: production_schema.order_id,
-      product_ids: production_schema.product_ids,
-      products: production_schema.products,
-      created_at: production_schema.created_at,
-      status: production_schema.status
+      order_id: Map.get(production_schema, :order_id),
+      product_ids: Map.get(production_schema, :product_ids),
+      products: Map.get(production_schema, :products),
+      created_at: Map.get(production_schema, :created_at),
+      status: Map.get(production_schema, :status)
     }
   end
 end

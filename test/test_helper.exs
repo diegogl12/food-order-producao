@@ -1,3 +1,10 @@
-
-
 ExUnit.start()
+
+Mox.defmock(MockProductionRepository, for: FoodOrderProducao.Domain.Repositories.ProductionRepositoryBehaviour)
+Mox.defmock(MockProductGateway, for: FoodOrderProducao.InterfaceAdapters.Gateways.ProductGatewayBehaviour)
+Mox.defmock(MockOrderGateway, for: FoodOrderProducao.InterfaceAdapters.Gateways.OrderGatewayBehaviour)
+Mox.defmock(MockEventProductionDTO, for: FoodOrderProducao.InterfaceAdapters.DTOs.EventProductionDTO)
+Mox.defmock(MockWebProductionDTO, for: FoodOrderProducao.InterfaceAdapters.DTOs.WebProductionDTO)
+Mox.defmock(MockInitializeProduction, for: FoodOrderProducao.UseCases.InitializeProduction)
+Mox.defmock(MockUpdateProductionAndOrderStatus, for: FoodOrderProducao.UseCases.UpdateProductionAndOrderStatus)
+Mox.defmock(MockGetProduction, for: FoodOrderProducao.UseCases.GetProduction)

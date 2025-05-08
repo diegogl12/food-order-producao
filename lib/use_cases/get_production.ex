@@ -3,6 +3,7 @@ defmodule FoodOrderProducao.UseCases.GetProduction do
 
   alias FoodOrderProducao.Domain.Entities.Production
 
+  @callback execute(String.t(), ProductionRepository.t(), ProductGateway.t()) :: {:ok, Production.t()} | {:error, String.t()}
   def execute(order_id, production_repository, product_gateway) do
     with {:ok, %Production{product_ids: product_ids} = production} <- production_repository.get_by_order_id(order_id),
          {:ok, products} <- product_gateway.get_products(product_ids),
