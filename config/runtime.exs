@@ -3,7 +3,7 @@ import Config
 config :food_order_producao, :sqs,
   production: [
     host: System.get_env("AWS_ENDPOINT"),
-    name: System.get_env("PRODUCTION_SQS_NAME")
+    name: System.get_env("PRODUCAO_SQS_NAME")
   ]
 
 config :food_order_producao, :aws,

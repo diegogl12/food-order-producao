@@ -1,5 +1,5 @@
-message := '{"order_id": "2d998c18-23ac-11f0-81ff-0242ac160004", "amount": 99.99, "customer_id": "65fa2a88-f524-4f50-bdd4-c3b8355db47e", "payment_method": "credit_card"}'
-queue_name := checkout
+message := '{"numero_pedido": "2d998c18-23ac-11f0-81ff-0242ac160004", "lista_produtos": ["1", "2", "3"]}'
+queue_name := producao
 
 create_message:
 	aws sqs send-message \

@@ -23,6 +23,7 @@ defmodule FoodOrderProducao.InterfaceAdapters.DTOs.EventProductionDTO do
       |> Enum.map(fn {key, value} ->
         {String.to_existing_atom(key), value}
       end)
+      |> Map.new()
 
     dto = %__MODULE__{
       order_id: map_with_atoms.numero_pedido,
