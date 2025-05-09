@@ -11,6 +11,7 @@ defmodule FoodOrderProducao.InterfaceAdapters.DTOs.WebProductionDTO do
           status: String.t() | nil
         }
 
+  @callback from_map(map()) :: {:ok, t()} | {:error, String.t()}
   def from_map(map) do
     map_with_atoms =
       map
@@ -30,6 +31,7 @@ defmodule FoodOrderProducao.InterfaceAdapters.DTOs.WebProductionDTO do
     {:ok, result}
   end
 
+  @callback to_domain(t()) :: {:ok, Production.t()}
   def to_domain(%__MODULE__{} = dto) do
     result = %Production{
       order_id: dto.order_id,

@@ -14,6 +14,9 @@ defmodule FoodOrderProducao.InterfaceAdapters.Gateways.Clients.Pedidos do
 
       {:ok, %{status: _status, body: body}} ->
         {:error, body}
+
+      {:error, error} ->
+        {:error, error}
     end
   end
 

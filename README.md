@@ -1,3 +1,4 @@
+[![Coverage Status](https://coveralls.io/repos/github/diegogl12/food-order-producao/badge.svg?branch=feat/tests)](https://coveralls.io/github/diegogl12/food-order-producao?branch=feat/tests)
 # FoodOrderProducao
 
 Microserviço responsável pelo módulo de pagamentos da arquitetura de microserviços do sistema FoodOrder.
