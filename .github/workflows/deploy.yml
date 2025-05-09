@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1.0.0
-      - uses: actions/setup-elixir@v1.0.0
+      - uses: erlef/setup-beam@v1
         with:
-          elixir-version: 1.18.0
-          otp-version: 26.0
+          elixir-version: '1.18.0' # Use a versão do Elixir do seu projeto
+          otp-version: '26.0'
       - run: mix deps.get
       - run: mix compile
       - run: mix release
